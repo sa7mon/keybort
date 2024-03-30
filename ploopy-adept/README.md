@@ -30,13 +30,31 @@
 * E - Mouse Btn2
 * F - Mouse Btn3
 
-## Compile Firmware
+## Drag Scroll Patch
+
+The default Vial behavior for drag scrolling was a bit too limited for me. Using the Drag Scroll keycode, you can define a button that, when held, will toggle drag scroll mode. This is great, but when I'm scrolling long distances, I don't want to hold the button the whole time.
+
+To fix this, I added a custom keycode `DRAG_SCROLL_FIX` that, when pressed, will toggle drag scroll mode until it is pressed again. For my layout, I defined a "Tap Dance" so that Ploopy Button D (from the diagram above) will enable drag scroll when held and will toggle drag scroll when tapped.
+
+I've included those changes in this folder as a patch file. Normally I'd maintain a fork of the repo with my changes, but the QMK and VIAL repos are committed to so actively I didn't want to deal with merge conflicts and syncing the main branch. `git apply` should be able to apply the patch, but I haven't tested it.
+
+## Compile Stock Firmware
 
 ```sh
-docker build . -t qmk:latest
-docker run --rm -it qmk:latest bash
-root# qmk compile -kb ploopyco/madromys/rev1_001 -km via
-# .uf2 in /root/qmk_firmware/.build/
+> docker build . -t qmk:latest
+> docker run --rm -it qmk:latest bash
+$ qmk compile -kb ploopyco/madromys/rev1_001 -km via
+```
+`.uf2` will be in /root/qmk_firmware/.build/
+
+## Compile [Vial](https://github.com/vial-kb/vial-qmk) Firmware
+
+```sh
+> docker build . -t qmk:latest
+> docker run --rm -it qmk:latest bash
+$ cd /root/qmk_firmware && git switch vial
+$ (optionally apply drag scroll patch)
+$ qmk compile -kb ploopyco/madromys/rev1_001 -km vial
 ```
 
 ## Flash Firmware
